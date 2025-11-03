@@ -6,6 +6,9 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginComponent from './components/LoginComponent';
 import ProtectedRoute from './components/ProtectedRoute';
 import RegisterComponent from './components/RegisterComponent';
+import NavbarComponent from './components/NavbarComponent';
+import AggiungiEntrataComponent from './components/AggiungiEntrataComponent';
+import EntrateListComponent from './components/EntrateListComponent';
 
 
 function App() {
@@ -25,7 +28,8 @@ function App() {
 
   return (
     <>
-
+      {/* Se il token esiste mostriamo la navbar e gli passiamo la funzione di logout */}
+      {authToken && <NavbarComponent onLogout={handleLogout} />}
       <Routes>
 
         {/* Route Pubbliche */}
@@ -46,9 +50,14 @@ function App() {
         />
 
         {/* --- Route Protette --- */}
-        <Route path="/" element={
+        <Route path="/entrate/aggiungi" element={
           <ProtectedRoute token={authToken}>
-         
+            <AggiungiEntrataComponent />
+          </ProtectedRoute>
+        } />
+         <Route path="/entrate" element={
+          <ProtectedRoute token={authToken}>
+            <EntrateListComponent />
           </ProtectedRoute>
         } />
 
