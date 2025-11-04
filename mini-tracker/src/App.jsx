@@ -9,6 +9,10 @@ import RegisterComponent from './components/RegisterComponent';
 import NavbarComponent from './components/NavbarComponent';
 import AggiungiEntrataComponent from './components/AggiungiEntrataComponent';
 import EntrateListComponent from './components/EntrateListComponent';
+import UsciteListComponent from './components/UsciteListComponent';
+import AggiungiUscitaComponent from './components/AggiungiUscitaComponent';
+import ProfiloUtenteComponent from './components/ProfiloUtenteComponent';
+import ModificaProfiloComponent from './components/ModificaProfiloComponent';
 
 
 function App() {
@@ -55,12 +59,33 @@ function App() {
             <AggiungiEntrataComponent />
           </ProtectedRoute>
         } />
-         <Route path="/entrate" element={
+        <Route path="/entrate" element={
           <ProtectedRoute token={authToken}>
             <EntrateListComponent />
           </ProtectedRoute>
         } />
 
+        <Route path="/uscite" element={
+          <ProtectedRoute token={authToken}>
+            <UsciteListComponent />
+          </ProtectedRoute>
+        } />
+        <Route path="/uscite/aggiungi" element={
+          <ProtectedRoute token={authToken}>
+            <AggiungiUscitaComponent />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/profilo" element={
+          <ProtectedRoute token={authToken}>
+            <ProfiloUtenteComponent />
+          </ProtectedRoute>
+        } />
+        <Route path="/profilo/modifica" element={
+          <ProtectedRoute token={authToken}>
+            <ModificaProfiloComponent />
+          </ProtectedRoute>
+        } />
       </Routes>
     </>
   )

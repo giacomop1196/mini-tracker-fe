@@ -30,7 +30,7 @@ function NavbarComponent({ onLogout }) {
                         <Nav.Link as={Link} to="/entrate">
                             Entrate
                         </Nav.Link>
-                        <Nav.Link as={Link} to="/fatture">
+                        <Nav.Link as={Link} to="/uscite">
                             Uscite
                         </Nav.Link>
                     </Nav>
