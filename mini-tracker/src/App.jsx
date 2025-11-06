@@ -13,6 +13,7 @@ import UsciteListComponent from './components/UsciteListComponent';
 import AggiungiUscitaComponent from './components/AggiungiUscitaComponent';
 import ProfiloUtenteComponent from './components/ProfiloUtenteComponent';
 import ModificaProfiloComponent from './components/ModificaProfiloComponent';
+import DashboardComponent from './components/DashboardComponent';
 
 
 function App() {
@@ -45,7 +46,7 @@ function App() {
           element={
             authToken ? (
               // Se l'utente è GIÀ loggato, lo reindirizzo ad una pagina
-              <Navigate to="/" replace />
+              <DashboardComponent replace />
             ) : (
               // Altrimenti mostro il componente di login
               <LoginComponent onLoginSuccess={handleLogin} />
@@ -84,6 +85,11 @@ function App() {
         <Route path="/profilo/modifica" element={
           <ProtectedRoute token={authToken}>
             <ModificaProfiloComponent />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard" element={
+          <ProtectedRoute token={authToken}>
+            <DashboardComponent />
           </ProtectedRoute>
         } />
       </Routes>

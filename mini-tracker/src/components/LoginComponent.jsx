@@ -56,7 +56,7 @@ function LoginComponent({ onLoginSuccess }) {
                     onLoginSuccess(result.data.token);
                 }
 
-                navigate('/', { replace: true });
+                navigate('/dashboard', { replace: true });
             })
             .catch((err) => {
                 setError(err.message);
