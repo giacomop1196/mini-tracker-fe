@@ -14,6 +14,7 @@ import AggiungiUscitaComponent from './components/AggiungiUscitaComponent';
 import ProfiloUtenteComponent from './components/ProfiloUtenteComponent';
 import ModificaProfiloComponent from './components/ModificaProfiloComponent';
 import DashboardComponent from './components/DashboardComponent';
+import PaginaUtenti from './components/PaginaUtenti';
 
 
 function App() {
@@ -90,6 +91,11 @@ function App() {
         <Route path="/dashboard" element={
           <ProtectedRoute token={authToken}>
             <DashboardComponent />
+          </ProtectedRoute>
+        } />
+        <Route path="/utenti" element={
+          <ProtectedRoute token={authToken}>
+            <PaginaUtenti />
           </ProtectedRoute>
         } />
       </Routes>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Container, Row, Col, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 const API_LOGIN_URL = 'http://localhost:5000/auth/login';
 
@@ -45,19 +46,28 @@ function LoginComponent({ onLoginSuccess }) {
                 }
 
                 if (!result.data.token || !result.data.userId) {
-                    console.error("La risposta del login non contiene 'token'", result.data);
+                    console.error("La risposta del login è incompleta", result.data);
                     throw new Error("Errore di login: dati incompleti dal server.");
                 }
+                const token = result.data.token;
+                const userId = result.data.userId;
+                const decodedToken = jwtDecode(token);
+                const userRole = decodedToken.role;
 
-                localStorage.setItem('authToken', result.data.token);
-                localStorage.setItem('userId', result.data.userId);
+                // Salviamo tutto nel localStorage
+                localStorage.setItem('authToken', token);
+                localStorage.setItem('userId', userId);
+                localStorage.setItem('userRole', userRole);
+                console.log(userRole)
 
+              
                 if (onLoginSuccess) {
-                    onLoginSuccess(result.data.token);
+                    onLoginSuccess(token);
                 }
 
                 navigate('/dashboard', { replace: true });
             })
+         
             .catch((err) => {
                 setError(err.message);
             })
