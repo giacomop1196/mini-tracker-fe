@@ -26,6 +26,8 @@ function DashboardComponent() {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
+    const [adminStats, setAdminStats] = useState(null);
+
     const userRole = localStorage.getItem('userRole');
 
     // formattare la valuta
@@ -103,6 +105,44 @@ function DashboardComponent() {
         });
     };
 
+    // FUNZIONE PER I DATI ADMIN
+    const fetchAdminStats = useCallback(() => {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            setError('Accesso non autorizzato.');
+            setLoading(false);
+            return;
+        }
+
+        setLoading(true);
+        fetch(`${API_BASE_URL}/user/stats/total`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+            .then(res => {
+                if (!res.ok) {
+                    if (res.status === 401 || res.status === 403) {
+                        throw new Error('Sessione scaduta o permessi non validi.');
+                    }
+                    throw new Error('Errore nel caricamento delle statistiche admin.');
+                }
+                return res.json();
+            })
+            .then(data => {
+                // data ora è: { totalUsers: 10 }
+                setAdminStats(data);
+            })
+            .catch(err => {
+                setError(err.message);
+                if (err.message.includes('Sessione scaduta')) {
+                    localStorage.clear();
+                    setTimeout(() => navigate('/login'), 2000);
+                }
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, [navigate]);
+
 
     const fetchDashboardData = useCallback(() => {
         const token = localStorage.getItem('authToken');
@@ -160,14 +200,15 @@ function DashboardComponent() {
         if (userRole === 'USER') {
             fetchDashboardData();
         } else if (userRole === 'ADMIN') {
-            setLoading(false);
+            // Chiama la funzione per l'admin
+            fetchAdminStats();
         } else {
             setError('Ruolo utente non valido. Effettua il login.');
             localStorage.clear();
             setLoading(false);
             setTimeout(() => navigate('/login'), 2000);
         }
-    }, [userRole, fetchDashboardData, navigate]);
+    }, [userRole, fetchDashboardData, fetchAdminStats, navigate]);
 
     if (loading) {
         return (
@@ -208,12 +249,22 @@ function DashboardComponent() {
             <Container fluid className="p-5">
 
                 {userRole === 'ADMIN' && (
-                    <Row>
-                        <Col>
-                            <h2>Dashboard Amministratore</h2>
-                            <p>Grafici Admin</p>
-                        </Col>
-                    </Row>
+                    <>
+                        {adminStats && (
+                            <Row className="mb-4">
+                                <Col md={4}>
+                                    <Card className="shadow-sm rounded-5 text-center bg-light">
+                                        <Card.Body>
+                                            <Card.Title as="h6" className="text-primary text-uppercase">
+                                                <i className="bi bi-people-fill me-2"></i>Totale Utenti Iscritti
+                                            </Card.Title>
+                                            <h3 className="text-primary">{adminStats.totalUsers}</h3>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
+                        )}
+                    </>
                 )}
 
                 {userRole === 'USER' && (
