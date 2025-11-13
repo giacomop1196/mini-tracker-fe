@@ -27,6 +27,8 @@ function DashboardComponent() {
     const navigate = useNavigate();
 
     const [adminStats, setAdminStats] = useState(null);
+    const [lockedUsersStats, setLockedUsersStats] = useState(null);
+    const [globalEconomyStats, setGlobalEconomyStats] = useState(null);
 
     const userRole = localStorage.getItem('userRole');
 
@@ -111,25 +113,42 @@ function DashboardComponent() {
         if (!token) {
             setError('Accesso non autorizzato.');
             setLoading(false);
+            setTimeout(() => navigate('/login'), 2000);
             return;
         }
 
+        const headers = { 'Authorization': `Bearer ${token}` };
         setLoading(true);
-        fetch(`${API_BASE_URL}/user/stats/total`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        })
+        setError(null);
+
+        // 1. Prima chiamata: Totale Utenti
+        fetch(`${API_BASE_URL}/user/stats/total`, { headers })
             .then(res => {
-                if (!res.ok) {
-                    if (res.status === 401 || res.status === 403) {
-                        throw new Error('Sessione scaduta o permessi non validi.');
-                    }
-                    throw new Error('Errore nel caricamento delle statistiche admin.');
-                }
+                if (!res.ok) throw new Error('Errore caricamento totale utenti');
                 return res.json();
             })
-            .then(data => {
-                // data ora è: { totalUsers: 10 }
-                setAdminStats(data);
+            .then(totalData => {
+                setAdminStats(totalData); // { totalUsers: 10 }
+
+                // 2. Seconda chiamata: Utenti Bloccati
+                return fetch(`${API_BASE_URL}/user/stats/locked`, { headers });
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Errore caricamento utenti bloccati');
+                return res.json();
+            })
+            .then(lockedData => {
+                setLockedUsersStats(lockedData); // { totalLocked: 1 }
+
+                // 3. Terza chiamata: Economia Globale
+                return fetch(`${API_BASE_URL}/user/stats/global-economy`, { headers });
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Errore caricamento dati economia');
+                return res.json();
+            })
+            .then(economyData => {
+                setGlobalEconomyStats(economyData); // { globalRevenue: ..., globalExpenses: ... }
             })
             .catch(err => {
                 setError(err.message);
@@ -250,15 +269,56 @@ function DashboardComponent() {
 
                 {userRole === 'ADMIN' && (
                     <>
-                        {adminStats && (
-                            <Row className="mb-4">
-                                <Col md={4}>
+                        
+                        <Row className="mb-4 d-flex justify-content-center">
+                            {/* Card Totale Utenti */}
+                            {adminStats && (
+                                <Col md={4} className="mb-3">
                                     <Card className="shadow-sm rounded-5 text-center bg-light">
                                         <Card.Body>
                                             <Card.Title as="h6" className="text-primary text-uppercase">
-                                                <i className="bi bi-people-fill me-2"></i>Totale Utenti Iscritti
+                                                <i className="bi bi-people-fill me-2"></i>Totale Utenti
                                             </Card.Title>
                                             <h3 className="text-primary">{adminStats.totalUsers}</h3>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            )}
+                            {/* Card Utenti Bloccati */}
+                            {lockedUsersStats && (
+                                <Col md={4} className="mb-3">
+                                    <Card className="shadow-sm rounded-5 text-center bg-light">
+                                        <Card.Body>
+                                            <Card.Title as="h6" className="text-danger text-uppercase">
+                                                <i className="bi bi-lock-fill me-2"></i>Utenti Bloccati
+                                            </Card.Title>
+                                            <h3 className="text-danger">{lockedUsersStats.totalLocked}</h3>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            )}
+                        </Row>
+
+                        {/* Card Economia Globale */}
+                        {globalEconomyStats && (
+                            <Row className="mb-4 d-flex justify-content-center">
+                                <Col md={4} className="mb-3">
+                                    <Card className="shadow-sm rounded-5 text-center">
+                                        <Card.Body>
+                                            <Card.Title as="h6" className="text-success text-uppercase">
+                                                <i className="bi bi-graph-up-arrow me-2"></i>Entrate Globali
+                                            </Card.Title>
+                                            <h3 className="text-success">{formatCurrency(globalEconomyStats.globalRevenue)}</h3>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                                <Col md={4} className="mb-3">
+                                    <Card className="shadow-sm rounded-5 text-center">
+                                        <Card.Body>
+                                            <Card.Title as="h6" className="text-danger text-uppercase">
+                                                <i className="bi bi-graph-down-arrow me-2"></i>Spese Globali
+                                            </Card.Title>
+                                            <h3 className="text-danger">{formatCurrency(globalEconomyStats.globalExpenses)}</h3>
                                         </Card.Body>
                                     </Card>
                                 </Col>
