@@ -9,7 +9,7 @@ function NavbarComponent({ onLogout }) {
 
         localStorage.removeItem('authToken');
         localStorage.removeItem('userId');
-        localStorage.removeItem('userRole'); 
+        localStorage.removeItem('userRole');
 
         if (onLogout) {
             onLogout();
@@ -20,22 +20,28 @@ function NavbarComponent({ onLogout }) {
     return (
         <Navbar className='bg-transparent' expand="lg" collapseOnSelect>
             <Container>
-                <Navbar.Brand as={Link} to="/dashboard">
+                <Navbar.Brand as={Link} to="/dashboard" className="fw-bold text-primary d-flex align-items-center">
+                   <img
+                        src="img/logo.png" 
+                        alt="Mini Tracker Logo"
+                        height="40"
+                        className="d-inline-block align-top me-2"
+                    />
                     Mini Tracker
                 </Navbar.Brand>
 
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
 
-                  
+
                     <Nav className="me-auto">
-                        
-                      
+
+
                         <Nav.Link as={Link} to="/dashboard">
                             Dashboard
                         </Nav.Link>
 
-                       
+
                         {userRole === 'USER' && (
                             <>
                                 <Nav.Link as={Link} to="/entrate">
@@ -47,14 +53,14 @@ function NavbarComponent({ onLogout }) {
                             </>
                         )}
 
-                       
+
                         {userRole === 'ADMIN' && (
                             <Nav.Link as={Link} to="/utenti">
                                 Gestione Utenti
                             </Nav.Link>
                         )}
                     </Nav>
-                  
+
                     <Nav>
                         <NavDropdown
                             title="Profilo"

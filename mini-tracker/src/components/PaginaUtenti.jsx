@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Table, Button, Spinner } from 'react-bootstrap';
+import FooterComponent from './FooterComponent';
 
 function PaginaUtenti() {
     const [utenti, setUtenti] = useState([]);
@@ -42,44 +43,48 @@ function PaginaUtenti() {
     if (isLoading) return <Spinner />;
 
     return (
-        <div className='sfondo'>
-            <Container>
-                <Row className="justify-content-md-center">
-                    <Col md={8}>
-                        <Card className='rounded-5 mt-5 p-4'>
-                             <Card.Header as="h3"><i className="bi bi-person-lines-fill"></i> Lista Utenti</Card.Header>
-                            <Table striped bordered hover>
-                                <thead>
-                                    <tr>
-                                        <th>Username</th>
-                                        <th>Email</th>
-                                        <th>Stato</th>
-                                        <th>Azioni</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {utenti.map(user => (
-                                        <tr key={user.userId}>
-                                            <td>{user.username}</td>
-                                            <td>{user.email}</td>
-                                            <td>{user.locked ? 'Bloccato' : 'Attivo'}</td>
-                                            <td>
-                                                <Button
-                                                    variant={user.locked ? 'success' : 'danger'}
-                                                    onClick={() => handleToggleLock(user.userId, user.locked)}
-                                                >
-                                                  <i className="bi bi-ban"></i>  {user.locked ? 'Sblocca' : 'Blocca'}
-                                                </Button>
-                                            </td>
+        <>
+            <div className='sfondo'>
+                <Container>
+                    <Row className="justify-content-md-center">
+                        <Col md={8}>
+                            <Card className='rounded-5 mt-5 p-4'>
+                                <Card.Header as="h3"><i className="bi bi-person-lines-fill"></i> Lista Utenti</Card.Header>
+                                <Table striped bordered hover>
+                                    <thead>
+                                        <tr>
+                                            <th>Username</th>
+                                            <th>Email</th>
+                                            <th>Stato</th>
+                                            <th>Azioni</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </Table>
-                        </Card>
-                    </Col>
-                </Row>
-            </Container>
-        </div>
+                                    </thead>
+                                    <tbody>
+                                        {utenti.map(user => (
+                                            <tr key={user.userId}>
+                                                <td>{user.username}</td>
+                                                <td>{user.email}</td>
+                                                <td>{user.locked ? 'Bloccato' : 'Attivo'}</td>
+                                                <td>
+                                                    <Button
+                                                        variant={user.locked ? 'success' : 'danger'}
+                                                        onClick={() => handleToggleLock(user.userId, user.locked)}
+                                                    >
+                                                        <i className="bi bi-ban"></i>  {user.locked ? 'Sblocca' : 'Blocca'}
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+            {/* Footer */}
+            <FooterComponent />
+        </>
     );
 }
 

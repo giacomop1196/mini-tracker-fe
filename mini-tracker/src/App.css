@@ -6,3 +6,9 @@
   color: #212529;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+.sfondoHomeCard {
+  background-image: url('/img/sfondo.png');
+  background-size: cover; 
+  background-position: center; 
+}

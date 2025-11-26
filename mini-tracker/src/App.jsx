@@ -15,6 +15,7 @@ import ProfiloUtenteComponent from './components/ProfiloUtenteComponent';
 import ModificaProfiloComponent from './components/ModificaProfiloComponent';
 import DashboardComponent from './components/DashboardComponent';
 import PaginaUtenti from './components/PaginaUtenti';
+import HomeComponent from './components/HomeComponent';
 
 
 function App() {
@@ -40,6 +41,8 @@ function App() {
 
         {/* Route Pubbliche */}
         <Route path="/register" element={<RegisterComponent />} />
+        
+        <Route path="/" element={<HomeComponent />} />
 
         {/* Pagina di Login */}
         <Route

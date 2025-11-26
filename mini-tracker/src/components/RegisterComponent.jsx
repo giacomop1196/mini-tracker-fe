@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Container, Row, Col, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
+import NavbarWhiteComponent from './NavbarWhiteComponent';
+import FooterComponent from './FooterComponent';
 
 const API_REGISTER_URL = 'http://localhost:5000/auth/register';
 
@@ -83,108 +85,113 @@ function RegisterComponent() {
     };
 
     return (
-        <div className='sfondo'>
-            <Container>
-                <Row className="justify-content-md-center">
-                    <Col xs={12} md={6}>
-                        <h2 className="text-center mb-4 mt-5">Registrati</h2>
-                        <Form onSubmit={handleSubmit}>
-                            {error && <Alert variant="danger">{error}</Alert>}
-                            {success && <Alert variant="success">{success}</Alert>}
+        <>
+            {/* Navbar */}
+            <NavbarWhiteComponent />
+            <div className='sfondo mt-5'>
+                <Container>
+                    <Row className="justify-content-md-center">
+                        <Col xs={12} md={6}>
+                            <h2 className="text-center mb-4 mt-5">Registrati</h2>
+                            <Form onSubmit={handleSubmit}>
+                                {error && <Alert variant="danger">{error}</Alert>}
+                                {success && <Alert variant="success">{success}</Alert>}
 
-                            <Form.Group className="mb-3" controlId="formRegisterNome">
-                                <Form.Label>Nome</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Il tuo nome"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    required
+                                <Form.Group className="mb-3" controlId="formRegisterNome">
+                                    <Form.Label>Nome</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Il tuo nome"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        required
+                                        disabled={isLoading}
+                                        className='rounded-5'
+                                    />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="formRegisterCognome">
+                                    <Form.Label>Cognome</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Il tuo cognome"
+                                        value={surname}
+                                        onChange={(e) => setSurname(e.target.value)}
+                                        required
+                                        disabled={isLoading}
+                                        className='rounded-5'
+                                    />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="formRegisterUsername">
+                                    <Form.Label>Username</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Scegli un username"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        required
+                                        disabled={isLoading}
+                                        className='rounded-5'
+                                    />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="formRegisterEmail">
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control
+                                        type="email"
+                                        placeholder="Inserisci email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                        disabled={isLoading}
+                                        className='rounded-5'
+                                    />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="formRegisterPassword">
+                                    <Form.Label>Password</Form.Label>
+                                    <Form.Control
+                                        type="password"
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                        disabled={isLoading}
+                                        className='rounded-5'
+                                    />
+                                </Form.Group>
+
+                                <Button
+                                    variant="primary"
+                                    type="submit"
                                     disabled={isLoading}
-                                    className='rounded-5'
-                                />
-                            </Form.Group>
+                                    className="w-100 rounded-5"
+                                >
+                                    {isLoading ? (
+                                        <>
+                                            <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                                            <span className="ms-2">Registrazione...</span>
+                                        </>
+                                    ) : (
+                                        'Registrati'
+                                    )}
+                                </Button>
 
-                            <Form.Group className="mb-3" controlId="formRegisterCognome">
-                                <Form.Label>Cognome</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Il tuo cognome"
-                                    value={surname}
-                                    onChange={(e) => setSurname(e.target.value)}
-                                    required
-                                    disabled={isLoading}
-                                    className='rounded-5'
-                                />
-                            </Form.Group>
-
-                            <Form.Group className="mb-3" controlId="formRegisterUsername">
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Scegli un username"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    required
-                                    disabled={isLoading}
-                                    className='rounded-5'
-                                />
-                            </Form.Group>
-
-                            <Form.Group className="mb-3" controlId="formRegisterEmail">
-                                <Form.Label>Email</Form.Label>
-                                <Form.Control
-                                    type="email"
-                                    placeholder="Inserisci email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                    disabled={isLoading}
-                                    className='rounded-5'
-                                />
-                            </Form.Group>
-
-                            <Form.Group className="mb-3" controlId="formRegisterPassword">
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control
-                                    type="password"
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                    disabled={isLoading}
-                                    className='rounded-5'
-                                />
-                            </Form.Group>
-
-                            <Button
-                                variant="primary"
-                                type="submit"
-                                disabled={isLoading}
-                                className="w-100 rounded-5"
-                            >
-                                {isLoading ? (
-                                    <>
-                                        <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
-                                        <span className="ms-2">Registrazione...</span>
-                                    </>
-                                ) : (
-                                    'Registrati'
-                                )}
-                            </Button>
-
-                            <div className="text-center mt-3">
-                                <p>
-                                    Hai già un account?{' '}
-                                    <Link to="/login">Accedi</Link>
-                                </p>
-                            </div>
-
-                        </Form>
-                    </Col>
-                </Row>
-            </Container>
-        </div>
+                                <div className="text-center mt-3">
+                                    <p>
+                                        Hai già un account?{' '}
+                                        <Link to="/login">Accedi</Link>
+                                    </p>
+                                </div>
+                            </Form>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+            {/* Footer */}
+            <FooterComponent />
+        </>
     );
 }
 

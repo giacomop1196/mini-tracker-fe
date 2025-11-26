@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Container, Row, Col, Card, Alert, Spinner, Button, ListGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import NavbarComponent from './NavbarComponent';
+import FooterComponent from './FooterComponent';
+
 
 const API_BASE_URL = 'http://localhost:5000';
 
@@ -125,56 +126,60 @@ function EntrateListComponent() {
     const entrate = entrateData ? entrateData.content : [];
 
     return (
-        <div className='sfondo'>
-            <Container>
-                <Row className="justify-content-md-center">
-                    <Col md={10}>
-                        <Card className='mt-5 rounded-5'>
-                            <Card.Header as="h3" className="d-flex justify-content-between align-items-center">
-                                <span>
-                                    <i className="bi bi-cash-coin me-2"></i>Tutte le Entrate
-                                </span>
-                                <Button
-                                    variant="primary"
-                                    className='rounded-5'
-                                    size="sm"
-                                    onClick={handleAggiungiClick}
-                                >
-                                    <i className="bi bi-plus-circle me-1"></i> Aggiungi Entrata
-                                </Button>
-                            </Card.Header>
-                            <Card.Body>
-                                {loading && <Spinner animation="border" size="sm" />}
+        <>
+            <div className='sfondo'>
+                <Container>
+                    <Row className="justify-content-md-center">
+                        <Col md={10}>
+                            <Card className='mt-5 rounded-5'>
+                                <Card.Header as="h3" className="d-flex justify-content-between align-items-center">
+                                    <span>
+                                        <i className="bi bi-cash-coin me-2"></i>Tutte le Entrate
+                                    </span>
+                                    <Button
+                                        variant="primary"
+                                        className='rounded-5'
+                                        size="sm"
+                                        onClick={handleAggiungiClick}
+                                    >
+                                        <i className="bi bi-plus-circle me-1"></i> Aggiungi Entrata
+                                    </Button>
+                                </Card.Header>
+                                <Card.Body>
+                                    {loading && <Spinner animation="border" size="sm" />}
 
-                                {entrate && entrate.length > 0 ? (
-                                    <ListGroup variant="flush">
-                                        {entrate.map(entrata => (
-                                            <ListGroup.Item key={entrata.revenueId} className="d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    <strong>Data: {entrata.date}</strong>
-                                                    <br />
-                                                    <small>
-                                                        Importo: {formatCurrency(entrata.amount)}
-                                                    </small>
+                                    {entrate && entrate.length > 0 ? (
+                                        <ListGroup variant="flush">
+                                            {entrate.map(entrata => (
+                                                <ListGroup.Item key={entrata.revenueId} className="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <strong>Data: {entrata.date}</strong>
+                                                        <br />
+                                                        <small>
+                                                            Importo: {formatCurrency(entrata.amount)}
+                                                        </small>
 
-                                                </div>
-                                                <div>
-                                                    <Button className='rounded-5' variant="outline-danger" size="sm" onClick={() => handleDelete(entrata.revenueId)}>
-                                                        <i className="bi bi-trash3"></i>  Elimina
-                                                    </Button>
-                                                </div>
-                                            </ListGroup.Item>
-                                        ))}
-                                    </ListGroup>
-                                ) : (
-                                    <Alert variant="info" className='rounded-5'>Nessuna entrata trovata.</Alert>
-                                )}
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-            </Container>
-        </div>
+                                                    </div>
+                                                    <div>
+                                                        <Button className='rounded-5' variant="outline-danger" size="sm" onClick={() => handleDelete(entrata.revenueId)}>
+                                                            <i className="bi bi-trash3"></i>  Elimina
+                                                        </Button>
+                                                    </div>
+                                                </ListGroup.Item>
+                                            ))}
+                                        </ListGroup>
+                                    ) : (
+                                        <Alert variant="info" className='rounded-5'>Nessuna entrata trovata.</Alert>
+                                    )}
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+            {/* Footer */}
+            <FooterComponent />
+        </>
     );
 }
 

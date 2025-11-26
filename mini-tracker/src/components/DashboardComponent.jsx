@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Alert, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Title, Tooltip, Legend } from 'chart.js';
 import { Line, Doughnut } from 'react-chartjs-2';
+import FooterComponent from './FooterComponent';
 
 // Registrazione componenti Chart.js
 ChartJS.register(
@@ -121,16 +122,16 @@ function DashboardComponent() {
         setLoading(true);
         setError(null);
 
-        // 1. Prima chiamata: Totale Utenti
+        // Prima chiamata: Totale Utenti
         fetch(`${API_BASE_URL}/user/stats/total`, { headers })
             .then(res => {
                 if (!res.ok) throw new Error('Errore caricamento totale utenti');
                 return res.json();
             })
             .then(totalData => {
-                setAdminStats(totalData); // { totalUsers: 10 }
+                setAdminStats(totalData);
 
-                // 2. Seconda chiamata: Utenti Bloccati
+                // Seconda chiamata: Utenti Bloccati
                 return fetch(`${API_BASE_URL}/user/stats/locked`, { headers });
             })
             .then(res => {
@@ -138,9 +139,9 @@ function DashboardComponent() {
                 return res.json();
             })
             .then(lockedData => {
-                setLockedUsersStats(lockedData); // { totalLocked: 1 }
+                setLockedUsersStats(lockedData);
 
-                // 3. Terza chiamata: Economia Globale
+                // Terza chiamata: Economia Globale
                 return fetch(`${API_BASE_URL}/user/stats/global-economy`, { headers });
             })
             .then(res => {
@@ -148,7 +149,7 @@ function DashboardComponent() {
                 return res.json();
             })
             .then(economyData => {
-                setGlobalEconomyStats(economyData); // { globalRevenue: ..., globalExpenses: ... }
+                setGlobalEconomyStats(economyData);
             })
             .catch(err => {
                 setError(err.message);
@@ -264,136 +265,140 @@ function DashboardComponent() {
     };
 
     return (
-        <div className='sfondo'>
-            <Container fluid className="p-5">
+        <>
+            <div className='sfondo'>
+                <Container fluid className="p-5">
 
-                {userRole === 'ADMIN' && (
-                    <>
-                        
-                        <Row className="mb-4 d-flex justify-content-center">
-                            {/* Card Totale Utenti */}
-                            {adminStats && (
-                                <Col md={4} className="mb-3">
-                                    <Card className="shadow-sm rounded-5 text-center bg-light">
-                                        <Card.Body>
-                                            <Card.Title as="h6" className="text-primary text-uppercase">
-                                                <i className="bi bi-people-fill me-2"></i>Totale Utenti
-                                            </Card.Title>
-                                            <h3 className="text-primary">{adminStats.totalUsers}</h3>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                            )}
-                            {/* Card Utenti Bloccati */}
-                            {lockedUsersStats && (
-                                <Col md={4} className="mb-3">
-                                    <Card className="shadow-sm rounded-5 text-center bg-light">
-                                        <Card.Body>
-                                            <Card.Title as="h6" className="text-danger text-uppercase">
-                                                <i className="bi bi-lock-fill me-2"></i>Utenti Bloccati
-                                            </Card.Title>
-                                            <h3 className="text-danger">{lockedUsersStats.totalLocked}</h3>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                            )}
-                        </Row>
+                    {userRole === 'ADMIN' && (
+                        <>
 
-                        {/* Card Economia Globale */}
-                        {globalEconomyStats && (
                             <Row className="mb-4 d-flex justify-content-center">
-                                <Col md={4} className="mb-3">
-                                    <Card className="shadow-sm rounded-5 text-center">
+                                {/* Card Totale Utenti */}
+                                {adminStats && (
+                                    <Col md={4} className="mb-3">
+                                        <Card className="shadow-sm rounded-5 text-center bg-light">
+                                            <Card.Body>
+                                                <Card.Title as="h6" className="text-primary text-uppercase">
+                                                    <i className="bi bi-people-fill me-2"></i>Totale Utenti
+                                                </Card.Title>
+                                                <h3 className="text-primary">{adminStats.totalUsers}</h3>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                )}
+                                {/* Card Utenti Bloccati */}
+                                {lockedUsersStats && (
+                                    <Col md={4} className="mb-3">
+                                        <Card className="shadow-sm rounded-5 text-center bg-light">
+                                            <Card.Body>
+                                                <Card.Title as="h6" className="text-danger text-uppercase">
+                                                    <i className="bi bi-lock-fill me-2"></i>Utenti Bloccati
+                                                </Card.Title>
+                                                <h3 className="text-danger">{lockedUsersStats.totalLocked}</h3>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                )}
+                            </Row>
+
+                            {/* Card Economia Globale */}
+                            {globalEconomyStats && (
+                                <Row className="mb-4 d-flex justify-content-center">
+                                    <Col md={4} className="mb-3">
+                                        <Card className="shadow-sm rounded-5 text-center">
+                                            <Card.Body>
+                                                <Card.Title as="h6" className="text-success text-uppercase">
+                                                    <i className="bi bi-graph-up-arrow me-2"></i>Entrate Globali
+                                                </Card.Title>
+                                                <h3 className="text-success">{formatCurrency(globalEconomyStats.globalRevenue)}</h3>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                    <Col md={4} className="mb-3">
+                                        <Card className="shadow-sm rounded-5 text-center">
+                                            <Card.Body>
+                                                <Card.Title as="h6" className="text-danger text-uppercase">
+                                                    <i className="bi bi-graph-down-arrow me-2"></i>Spese Globali
+                                                </Card.Title>
+                                                <h3 className="text-danger">{formatCurrency(globalEconomyStats.globalExpenses)}</h3>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                </Row>
+                            )}
+                        </>
+                    )}
+
+                    {userRole === 'USER' && (
+                        <>
+                            {/* Card dei Totali */}
+                            {summaryData && (
+                                <Row className="mb-4">
+                                    <Col md={4}>
+                                        <Card className="shadow-sm rounded-5 text-center">
+                                            <Card.Body>
+                                                <Card.Title as="h6" className="text-success text-uppercase">
+                                                    <i className="bi bi-arrow-up-circle me-2"></i>Totale Entrate
+                                                </Card.Title>
+                                                <h3 className="text-success">{formatCurrency(summaryData.totalRevenue)}</h3>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                    <Col md={4}>
+                                        <Card className="shadow-sm rounded-5 text-center">
+                                            <Card.Body>
+                                                <Card.Title as="h6" className="text-danger text-uppercase">
+                                                    <i className="bi bi-arrow-down-circle me-2"></i>Totale Spese
+                                                </Card.Title>
+                                                <h3 className="text-danger">{formatCurrency(summaryData.totalExpense)}</h3>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                    <Col md={4}>
+                                        <Card className="shadow-sm rounded-5 text-center bg-light">
+                                            <Card.Body>
+                                                <Card.Title as="h6" className="text-primary text-uppercase">
+                                                    <i className="bi bi-wallet2 me-2"></i>Saldo Disponibile
+                                                </Card.Title>
+                                                <h3 className="text-primary">{formatCurrency(summaryData.availableBalance)}</h3>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                </Row>
+                            )}
+
+                            {/* Grafici */}
+                            <Row>
+                                <Col lg={8} className="mb-4">
+                                    <Card className="shadow-sm rounded-5">
                                         <Card.Body>
-                                            <Card.Title as="h6" className="text-success text-uppercase">
-                                                <i className="bi bi-graph-up-arrow me-2"></i>Entrate Globali
-                                            </Card.Title>
-                                            <h3 className="text-success">{formatCurrency(globalEconomyStats.globalRevenue)}</h3>
+                                            {lineChartData ? (
+                                                <Line options={lineChartOptions} data={lineChartData} />
+                                            ) : (
+                                                <Alert variant="info">Dati per il grafico andamento non sufficienti.</Alert>
+                                            )}
                                         </Card.Body>
                                     </Card>
                                 </Col>
-                                <Col md={4} className="mb-3">
-                                    <Card className="shadow-sm rounded-5 text-center">
+                                <Col lg={4} className="mb-4">
+                                    <Card className="shadow-sm rounded-5">
                                         <Card.Body>
-                                            <Card.Title as="h6" className="text-danger text-uppercase">
-                                                <i className="bi bi-graph-down-arrow me-2"></i>Spese Globali
-                                            </Card.Title>
-                                            <h3 className="text-danger">{formatCurrency(globalEconomyStats.globalExpenses)}</h3>
+                                            {doughnutChartData ? (
+                                                <Doughnut options={doughnutChartOptions} data={doughnutChartData} />
+                                            ) : (
+                                                <Alert variant="info">Nessuna spesa da categorizzare.</Alert>
+                                            )}
                                         </Card.Body>
                                     </Card>
                                 </Col>
                             </Row>
-                        )}
-                    </>
-                )}
-
-                {userRole === 'USER' && (
-                    <>
-                        {/* Card dei Totali */}
-                        {summaryData && (
-                            <Row className="mb-4">
-                                <Col md={4}>
-                                    <Card className="shadow-sm rounded-5 text-center">
-                                        <Card.Body>
-                                            <Card.Title as="h6" className="text-success text-uppercase">
-                                                <i className="bi bi-arrow-up-circle me-2"></i>Totale Entrate
-                                            </Card.Title>
-                                            <h3 className="text-success">{formatCurrency(summaryData.totalRevenue)}</h3>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                                <Col md={4}>
-                                    <Card className="shadow-sm rounded-5 text-center">
-                                        <Card.Body>
-                                            <Card.Title as="h6" className="text-danger text-uppercase">
-                                                <i className="bi bi-arrow-down-circle me-2"></i>Totale Spese
-                                            </Card.Title>
-                                            <h3 className="text-danger">{formatCurrency(summaryData.totalExpense)}</h3>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                                <Col md={4}>
-                                    <Card className="shadow-sm rounded-5 text-center bg-light">
-                                        <Card.Body>
-                                            <Card.Title as="h6" className="text-primary text-uppercase">
-                                                <i className="bi bi-wallet2 me-2"></i>Saldo Disponibile
-                                            </Card.Title>
-                                            <h3 className="text-primary">{formatCurrency(summaryData.availableBalance)}</h3>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                            </Row>
-                        )}
-
-                        {/* Grafici */}
-                        <Row>
-                            <Col lg={8} className="mb-4">
-                                <Card className="shadow-sm rounded-5">
-                                    <Card.Body>
-                                        {lineChartData ? (
-                                            <Line options={lineChartOptions} data={lineChartData} />
-                                        ) : (
-                                            <Alert variant="info">Dati per il grafico andamento non sufficienti.</Alert>
-                                        )}
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                            <Col lg={4} className="mb-4">
-                                <Card className="shadow-sm rounded-5">
-                                    <Card.Body>
-                                        {doughnutChartData ? (
-                                            <Doughnut options={doughnutChartOptions} data={doughnutChartData} />
-                                        ) : (
-                                            <Alert variant="info">Nessuna spesa da categorizzare.</Alert>
-                                        )}
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        </Row>
-                    </>
-                )}
-            </Container>
-        </div>
+                        </>
+                    )}
+                </Container>
+            </div>
+            {/* Footer */}
+            <FooterComponent />
+        </>
     );
 }
 

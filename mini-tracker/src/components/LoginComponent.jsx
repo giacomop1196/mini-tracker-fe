@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Container, Row, Col, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import NavbarWhiteComponent from './NavbarWhiteComponent';
+import FooterComponent from './FooterComponent';
 
 const API_LOGIN_URL = 'http://localhost:5000/auth/login';
 
@@ -60,14 +62,14 @@ function LoginComponent({ onLoginSuccess }) {
                 localStorage.setItem('userRole', userRole);
                 console.log(userRole)
 
-              
+
                 if (onLoginSuccess) {
                     onLoginSuccess(token);
                 }
 
                 navigate('/dashboard', { replace: true });
             })
-         
+
             .catch((err) => {
                 setError(err.message);
             })
@@ -77,71 +79,77 @@ function LoginComponent({ onLoginSuccess }) {
     };
 
     return (
-        <div className='sfondo'>
-            <Container>
-                <Row className="justify-content-md-center">
-                    <Col xs={12} md={6}>
-                        <h2 className="text-center mb-4 mt-5">Login</h2>
-                        <Form onSubmit={handleSubmit}>
-                            {error && <Alert variant="danger">{error}</Alert>}
+        <>
+            {/* Navbar */}
+            <NavbarWhiteComponent />
+            <div className='sfondo mt-5'>
+                <Container>
+                    <Row className="justify-content-md-center">
+                        <Col xs={12} md={6}>
+                            <h2 className="text-center mb-4 mt-5">Accedi</h2>
+                            <Form onSubmit={handleSubmit}>
+                                {error && <Alert variant="danger">{error}</Alert>}
 
-                            <Form.Group className="mb-3" controlId="formLoginEmail">
-                                <Form.Label>Email</Form.Label>
-                                <Form.Control
-                                    className='rounded-5'
-                                    type="email"
-                                    placeholder="Inserisci email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
+                                <Form.Group className="mb-3" controlId="formLoginEmail">
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control
+                                        className='rounded-5'
+                                        type="email"
+                                        placeholder="Inserisci email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                        disabled={isLoading}
+                                    />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="formLoginPassword">
+                                    <Form.Label>Password</Form.Label>
+                                    <Form.Control
+                                        className='rounded-5'
+                                        type="password"
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                        disabled={isLoading}
+                                    />
+                                </Form.Group>
+
+                                <Button
+                                    variant="primary"
+                                    type="submit"
                                     disabled={isLoading}
-                                />
-                            </Form.Group>
-
-                            <Form.Group className="mb-3" controlId="formLoginPassword">
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control
-                                    className='rounded-5'
-                                    type="password"
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                    disabled={isLoading}
-                                />
-                            </Form.Group>
-
-                            <Button
-                                variant="primary"
-                                type="submit"
-                                disabled={isLoading}
-                                className="w-100 rounded-5">
-                                {isLoading ? (
-                                    <>
-                                        <Spinner
-                                            as="span"
-                                            animation="border"
-                                            size="sm"
-                                            role="status"
-                                            aria-hidden="true"
-                                        />
-                                        <span className="ms-2">Caricamento...</span>
-                                    </>
-                                ) : (
-                                    'Accedi'
-                                )}
-                            </Button>
-                            <div className="text-center mt-3">
-                                <p>
-                                    Non hai un account?{' '}
-                                    <Link to="/register">Registrati</Link>
-                                </p>
-                            </div>
-                        </Form>
-                    </Col>
-                </Row>
-            </Container>
-        </div>
+                                    className="w-100 rounded-5">
+                                    {isLoading ? (
+                                        <>
+                                            <Spinner
+                                                as="span"
+                                                animation="border"
+                                                size="sm"
+                                                role="status"
+                                                aria-hidden="true"
+                                            />
+                                            <span className="ms-2">Caricamento...</span>
+                                        </>
+                                    ) : (
+                                        'Accedi'
+                                    )}
+                                </Button>
+                                <div className="text-center mt-3">
+                                    <p>
+                                        Non hai un account?{' '}
+                                        <Link to="/register">Registrati</Link>
+                                    </p>
+                                </div>
+                            </Form>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+            {/* Footer */}
+            <FooterComponent />
+        </>
     );
 }
 

@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Container, Row, Col, Card, Alert, Spinner, Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import FooterComponent from './FooterComponent';
 
 const API_BASE_URL = 'http://localhost:5000';
 
 const expenseTypes = [
-    'VARIE', 'SHOPPING', 'SERVIZI', 'TABACCHI', 
+    'VARIE', 'SHOPPING', 'SERVIZI', 'TABACCHI',
     'LOTTERIE', 'RISTORAZIONE', 'ONLINE', 'CARBURANTE'
 ];
 
@@ -46,7 +47,7 @@ function AggiungiUscitaComponent() {
         const payload = {
             date: formData.date,
             amount: parseFloat(formData.amount),
-            type: formData.type 
+            type: formData.type
         };
 
         const API_URL_CREATE = `${API_BASE_URL}/user/${userId}/expense`;
@@ -74,8 +75,8 @@ function AggiungiUscitaComponent() {
             })
             .then(data => {
                 setSuccess(`Uscita del ${data.date} creata con successo!`);
-                setFormData({ date: '', amount: '', type: '' }); 
-                setTimeout(() => navigate('/uscite'), 2000); 
+                setFormData({ date: '', amount: '', type: '' });
+                setTimeout(() => navigate('/uscite'), 2000);
             })
             .catch(err => {
                 setError(err.message);
@@ -86,57 +87,61 @@ function AggiungiUscitaComponent() {
     };
 
     return (
-        <div className='sfondo'>
-            <Container>
-                <Row className="justify-content-md-center">
-                    <Col md={8}>
-                        <Card className='rounded-5 mt-5'>
-                            <Card.Header as="h3"><i className="bi bi-plus-circle"></i> Aggiungi Uscita</Card.Header>
-                            <Card.Body>
-                                <Form onSubmit={handleSubmit}>
-                                    {error && <Alert variant="danger">{error}</Alert>}
-                                    {success && <Alert variant="success">{success}</Alert>}
+        <>
+            <div className='sfondo'>
+                <Container>
+                    <Row className="justify-content-md-center">
+                        <Col md={8}>
+                            <Card className='rounded-5 mt-5'>
+                                <Card.Header as="h3"><i className="bi bi-plus-circle"></i> Aggiungi Uscita</Card.Header>
+                                <Card.Body>
+                                    <Form onSubmit={handleSubmit}>
+                                        {error && <Alert variant="danger">{error}</Alert>}
+                                        {success && <Alert variant="success">{success}</Alert>}
 
-                                    <Form.Group className="mb-3" controlId="formDate">
-                                        <Form.Label>Data Uscita</Form.Label>
-                                        <Form.Control className='rounded-5' type="date" name="date" value={formData.date} onChange={handleChange} required />
-                                    </Form.Group>
+                                        <Form.Group className="mb-3" controlId="formDate">
+                                            <Form.Label>Data Uscita</Form.Label>
+                                            <Form.Control className='rounded-5' type="date" name="date" value={formData.date} onChange={handleChange} required />
+                                        </Form.Group>
 
-                                    <Form.Group className="mb-3" controlId="formAmount">
-                                        <Form.Label>Importo (€)</Form.Label>
-                                        <Form.Control className='rounded-5' type="number" step="0.01" name="amount" value={formData.amount} onChange={handleChange} required />
-                                    </Form.Group>
+                                        <Form.Group className="mb-3" controlId="formAmount">
+                                            <Form.Label>Importo (€)</Form.Label>
+                                            <Form.Control className='rounded-5' type="number" step="0.01" name="amount" value={formData.amount} onChange={handleChange} required />
+                                        </Form.Group>
 
-                                    <Form.Group className="mb-3" controlId="formType">
-                                        <Form.Label>Tipo di Uscita</Form.Label>
-                                        <Form.Select 
-                                            className='rounded-5'
-                                            name="type" 
-                                            value={formData.type} 
-                                            onChange={handleChange} 
-                                            required
-                                        >
-                                            <option value="" disabled>Seleziona un tipo...</option>
-                                            {expenseTypes.map(type => (
-                                                <option key={type} value={type}>{type}</option>
-                                            ))}
-                                        </Form.Select>
-                                    </Form.Group>
+                                        <Form.Group className="mb-3" controlId="formType">
+                                            <Form.Label>Tipo di Uscita</Form.Label>
+                                            <Form.Select
+                                                className='rounded-5'
+                                                name="type"
+                                                value={formData.type}
+                                                onChange={handleChange}
+                                                required
+                                            >
+                                                <option value="" disabled>Seleziona un tipo...</option>
+                                                {expenseTypes.map(type => (
+                                                    <option key={type} value={type}>{type}</option>
+                                                ))}
+                                            </Form.Select>
+                                        </Form.Group>
 
-                                    <hr />
-                                    <Button variant="secondary" onClick={() => navigate(-1)} className="me-2 rounded-5" disabled={loading}>
-                                        Annulla
-                                    </Button>
-                                    <Button variant="primary" className='rounded-5' type="submit" disabled={loading}>
-                                        <i className="bi bi-floppy"></i>  {loading ? 'Salvataggio...' : 'Salva Uscita'}
-                                    </Button>
-                                </Form>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-            </Container>
-        </div>
+                                        <hr />
+                                        <Button variant="secondary" onClick={() => navigate(-1)} className="me-2 rounded-5" disabled={loading}>
+                                            Annulla
+                                        </Button>
+                                        <Button variant="primary" className='rounded-5' type="submit" disabled={loading}>
+                                            <i className="bi bi-floppy"></i>  {loading ? 'Salvataggio...' : 'Salva Uscita'}
+                                        </Button>
+                                    </Form>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+            {/* Footer */}
+            <FooterComponent />
+        </>
     );
 }
 

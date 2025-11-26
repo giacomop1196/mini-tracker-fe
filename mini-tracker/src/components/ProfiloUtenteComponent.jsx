@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Container, Row, Col, Card, Alert, Spinner, ListGroup, Image, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import FooterComponent from './FooterComponent';
 
 const API_BASE_URL = 'http://localhost:5000';
 
@@ -21,8 +22,7 @@ function ProfiloUtenteComponent() {
             return;
         }
 
-        // Endpoint corretto da UserController.java
-        const API_URL = `${API_BASE_URL}/user/${userId}`; 
+        const API_URL = `${API_BASE_URL}/user/${userId}`;
         setLoading(true);
         setError(null);
 
@@ -84,55 +84,59 @@ function ProfiloUtenteComponent() {
     }
 
     return (
-        <div className='sfondo'>
-            <Container>
-                <Row className="justify-content-md-center">
-                    <Col md={8}>
-                        <Card className='mt-5 rounded-5'>
-                            <Card.Header as="h3" className="d-flex justify-content-between align-items-center">
-                                <span><i className="bi bi-person-circle me-2"></i> Il Mio Profilo</span>
-                                <Button variant="outline-primary" size="sm" className='rounded-5' onClick={() => navigate('/profilo/modifica')}>
-                                    <i className="bi bi-pencil-square me-1"></i> Modifica
-                                </Button>
-                            </Card.Header>
-                            <Card.Body>
-                                {utente ? (
-                                    <>
-                                        <div className="text-center mb-3">
-                                            {/* Immagine Avatar */}
-                                            <Image 
-                                                src={utente.avatarURL || 'https://i0.wp.com/www.lombardoandrea.com/wp-content/uploads/immagine_profilo_facebook_lombardoandrea_com.png?fit=720%2C340&ssl=1'} 
-                                                roundedCircle 
-                                                style={{ width: '150px', height: '150px', objectFit: 'cover' }} 
-                                            />
-                                        </div>
-                                        <ListGroup variant="flush">
-                                            <ListGroup.Item>
-                                                <strong>Nome:</strong> {utente.name}
-                                            </ListGroup.Item>
-                                            <ListGroup.Item>
-                                                <strong>Cognome:</strong> {utente.surname}
-                                            </ListGroup.Item>
-                                            <ListGroup.Item>
-                                                <strong>Email:</strong> {utente.email}
-                                            </ListGroup.Item>
-                                            <ListGroup.Item>
-                                                <strong>Username:</strong> {utente.username}
-                                            </ListGroup.Item>
-                                            <ListGroup.Item>
-                                                <strong>Ruolo:</strong> {utente.role}
-                                            </ListGroup.Item>
-                                        </ListGroup>
-                                    </>
-                                ) : (
-                                    <Alert variant="warning">Dati utente non trovati.</Alert>
-                                )}
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-            </Container>
-        </div>
+        <>
+            <div className='sfondo'>
+                <Container>
+                    <Row className="justify-content-md-center">
+                        <Col md={8}>
+                            <Card className='mt-5 rounded-5'>
+                                <Card.Header as="h3" className="d-flex justify-content-between align-items-center">
+                                    <span><i className="bi bi-person-circle me-2"></i> Il Mio Profilo</span>
+                                    <Button variant="outline-primary" size="sm" className='rounded-5' onClick={() => navigate('/profilo/modifica')}>
+                                        <i className="bi bi-pencil-square me-1"></i> Modifica
+                                    </Button>
+                                </Card.Header>
+                                <Card.Body>
+                                    {utente ? (
+                                        <>
+                                            <div className="text-center mb-3">
+                                                {/* Immagine Avatar */}
+                                                <Image
+                                                    src={utente.avatarURL || 'https://i0.wp.com/www.lombardoandrea.com/wp-content/uploads/immagine_profilo_facebook_lombardoandrea_com.png?fit=720%2C340&ssl=1'}
+                                                    roundedCircle
+                                                    style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+                                                />
+                                            </div>
+                                            <ListGroup variant="flush">
+                                                <ListGroup.Item>
+                                                    <strong>Nome:</strong> {utente.name}
+                                                </ListGroup.Item>
+                                                <ListGroup.Item>
+                                                    <strong>Cognome:</strong> {utente.surname}
+                                                </ListGroup.Item>
+                                                <ListGroup.Item>
+                                                    <strong>Email:</strong> {utente.email}
+                                                </ListGroup.Item>
+                                                <ListGroup.Item>
+                                                    <strong>Username:</strong> {utente.username}
+                                                </ListGroup.Item>
+                                                <ListGroup.Item>
+                                                    <strong>Ruolo:</strong> {utente.role}
+                                                </ListGroup.Item>
+                                            </ListGroup>
+                                        </>
+                                    ) : (
+                                        <Alert variant="warning">Dati utente non trovati.</Alert>
+                                    )}
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+            {/* Footer */}
+            <FooterComponent />
+        </>
     );
 }
 

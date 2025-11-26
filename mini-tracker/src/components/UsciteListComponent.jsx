@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Container, Row, Col, Card, Alert, Spinner, Button, ListGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import FooterComponent from './FooterComponent';
 
 const API_BASE_URL = 'http://localhost:5000';
 
@@ -29,7 +30,7 @@ function UsciteListComponent() {
             return;
         }
 
-        const API_URL = `${API_BASE_URL}/user/${userId}/expense`; 
+        const API_URL = `${API_BASE_URL}/user/${userId}/expense`;
         setLoading(true);
         setError(null);
 
@@ -77,7 +78,7 @@ function UsciteListComponent() {
         }
         if (!window.confirm('Sei sicuro di voler eliminare questa uscita?')) return;
 
-        fetch(`${API_BASE_URL}/user/${userId}/expense/${expenseId}`, { 
+        fetch(`${API_BASE_URL}/user/${userId}/expense/${expenseId}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         })
@@ -124,58 +125,62 @@ function UsciteListComponent() {
     const uscite = usciteData ? usciteData.content : [];
 
     return (
-        <div className='sfondo'>
-            <Container>
-                <Row className="justify-content-md-center">
-                    <Col md={10}>
-                        <Card className='mt-5 rounded-5'>
-                            <Card.Header as="h3" className="d-flex justify-content-between align-items-center">
-                                <span>
-                                    <i className="bi bi-credit-card-2-front me-2"></i>Tutte le Uscite
-                                </span>
-                                <Button
-                                    variant="primary"
-                                    className='rounded-5'
-                                    size="sm"
-                                    onClick={handleAggiungiClick}
-                                >
-                                    <i className="bi bi-plus-circle me-1"></i> Aggiungi Uscita
-                                </Button>
-                            </Card.Header>
-                            <Card.Body>
-                                {loading && <Spinner animation="border" size="sm" />}
+        <>
+            <div className='sfondo'>
+                <Container>
+                    <Row className="justify-content-md-center">
+                        <Col md={10}>
+                            <Card className='mt-5 rounded-5'>
+                                <Card.Header as="h3" className="d-flex justify-content-between align-items-center">
+                                    <span>
+                                        <i className="bi bi-credit-card-2-front me-2"></i>Tutte le Uscite
+                                    </span>
+                                    <Button
+                                        variant="primary"
+                                        className='rounded-5'
+                                        size="sm"
+                                        onClick={handleAggiungiClick}
+                                    >
+                                        <i className="bi bi-plus-circle me-1"></i> Aggiungi Uscita
+                                    </Button>
+                                </Card.Header>
+                                <Card.Body>
+                                    {loading && <Spinner animation="border" size="sm" />}
 
-                                {uscite && uscite.length > 0 ? (
-                                    <ListGroup variant="flush">
-                                        {uscite.map(uscita => (
-                                            <ListGroup.Item key={uscita.expenseId} className="d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    <strong>Data: {uscita.date}</strong>
-                                                    <br />
-                                                    <small className='me-3'>
-                                                        Importo: {formatCurrency(uscita.amount)}
-                                                    </small>
-                                                     <small>
-                                                        Tipo: <strong>{uscita.type}</strong>
-                                                    </small>
-                                                </div>
-                                                <div>
-                                                    <Button className='rounded-5' variant="outline-danger" size="sm" onClick={() => handleDelete(uscita.expenseId)}>
-                                                        <i className="bi bi-trash3"></i>  Elimina
-                                                    </Button>
-                                                </div>
-                                            </ListGroup.Item>
-                                        ))}
-                                    </ListGroup>
-                                ) : (
-                                    <Alert variant="info" className='rounded-5'>Nessuna uscita trovata.</Alert>
-                                )}
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-            </Container>
-        </div>
+                                    {uscite && uscite.length > 0 ? (
+                                        <ListGroup variant="flush">
+                                            {uscite.map(uscita => (
+                                                <ListGroup.Item key={uscita.expenseId} className="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <strong>Data: {uscita.date}</strong>
+                                                        <br />
+                                                        <small className='me-3'>
+                                                            Importo: {formatCurrency(uscita.amount)}
+                                                        </small>
+                                                        <small>
+                                                            Tipo: <strong>{uscita.type}</strong>
+                                                        </small>
+                                                    </div>
+                                                    <div>
+                                                        <Button className='rounded-5' variant="outline-danger" size="sm" onClick={() => handleDelete(uscita.expenseId)}>
+                                                            <i className="bi bi-trash3"></i>  Elimina
+                                                        </Button>
+                                                    </div>
+                                                </ListGroup.Item>
+                                            ))}
+                                        </ListGroup>
+                                    ) : (
+                                        <Alert variant="info" className='rounded-5'>Nessuna uscita trovata.</Alert>
+                                    )}
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+            {/* Footer */}
+            <FooterComponent />
+        </>
     );
 }
 
